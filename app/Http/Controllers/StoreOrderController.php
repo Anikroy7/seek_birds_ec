@@ -34,35 +34,41 @@ class StoreOrderController extends Controller
             ],
 
         );
-        $data = [];
-        $products = [];
-        $items = [];
-        $totalAmount = 0;
-        $total_items = 0;
-        $itemsId = session()->get('productIds');
-        if ($itemsId) {
-            foreach ($itemsId as $index => $item) {
-                foreach ($item as $key => $value) {
-                    $product = Product::findOrFail($key);
-                    $products[$index] = $product;
-                    $items[$key] = $value;
+        /* $data = [];
+            $products = [];
+            $items = [];
+            $totalAmount = 0;
+            $total_items = 0;
+            $itemsId = session()->get('productIds');
+            if ($itemsId) {
+                foreach ($itemsId as $index => $item) {
+                    foreach ($item as $key => $value) {
+                        $product = Product::findOrFail($key);
+                        $products[$index] = $product;
+                        $items[$key] = $value;
+                    }
                 }
             }
-        }
-        // dd($products);
-        if ($products && $items) {
-            foreach ($products as $key => $value) {
-                $totalAmount += $value->current_price * $items[$value->id];
-            }
-            foreach ($items as $key => $value) {
-                $total_items += $value;
-            }
-        }
+            // dd($products);
+            if ($products && $items) {
+                foreach ($products as $key => $value) {
+                    $totalAmount += $value->current_price * $items[$value->id];
+                }
+                foreach ($items as $key => $value) {
+                    $total_items += $value;
+                }
+            } */
+        $userId = $request->cookie('user_id');
+        $cartInfo = getCartInfo($userId);
+        $products = $cartInfo['products'];
+        $total_price = $cartInfo['total_price'];
+        $total_items = $cartInfo['total_items'];
+        $items = $cartInfo['items'];
         $data['customerName'] = $request->cus_name;
         $data['cus_address'] = $request->cus_address;
         $data['cus_email'] = $request->cus_email;
         $data['cus_phone'] = $request->cus_phone;
-        $data['totalAmount'] = $totalAmount;
+        $data['totalAmount'] = $total_price;
         $data['message'] = 'Confirmation for your order';
         $data['products'] = $products;
         $data['items'] = $items;
@@ -86,20 +92,20 @@ class StoreOrderController extends Controller
             $order->customer_address = $request->cus_address;
             $order->customer_email = $request->cus_email;
             $order->customer_phone = $request->cus_phone;
-            $order->products = json_encode($itemsId);
+            $order->products = json_encode($products);
             $order->save();
-            
+
             foreach ($toEmails as $key => $email) {
                 $response = Mail::to($email)->send(new OrderMail($data, $subject));
             }
-            if($response){
+            if ($response) {
                 return redirect('/checkout/success');
-            }else{
+            } else {
                 return redirect('/checkout/failed');
-            } 
+            }
             //code...
         } catch (\Throwable $e) {
-            dd('This is come from order,', $e); 
+            dd('This is come from order,', $e);
             return redirect('/checkout/failed');
         }
 

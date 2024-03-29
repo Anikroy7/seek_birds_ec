@@ -49,11 +49,11 @@ Route::get('/view-clear', function () {
 
 });
 
-Route::post('/store-session', function (Request $request) {
+/* Route::post('/store-session', function (Request $request) {
     Session::put('productIds', $request->input('value'));
 
     return response()->json(['message' => 'Session value stored successfully']);
-});
+}); */
 /* Route::post('/delete-session', function (Request $request) {
     Session::put('productIds', $request->input('value'));
 

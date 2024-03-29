@@ -76,7 +76,7 @@
             </div>
             <div class="mt-4">
                 <button class="px-4 py-1 text-white font-light tracking-wider bg-gray-900 rounded" type="submit">
-                    <span class="text-2xl font-bold">৳</span> 3.00
+                    <span class="text-2xl font-bold">৳</span> {{$total_price}}
                 </button>
             </div>
         </form>

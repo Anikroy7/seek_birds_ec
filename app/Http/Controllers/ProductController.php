@@ -20,10 +20,15 @@ class ProductController extends Controller
         
         return  view('home.home', compact('data', 'total_items'));
     }
-    public function product_details($id)
+    public function product_details(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-        return view('productDetails.productDetails', compact('product'));
+        $products = new Product();
+        $data = $products->get();
+        $userId = $request->cookie('user_id');
+        $cartInfo = getCartInfo($userId);
+        $total_items = $cartInfo['total_items'];
+        return view('productDetails.productDetails', compact('product', 'total_items'));
     }
     function cart_item_old(Request $request)
     {

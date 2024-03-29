@@ -23,7 +23,7 @@
                     <!-- Add to Cart Button -->
                 </div>
                 <div>
-                    <a onclick="addToCart(event, '{{$product->id}}', '+')" {{-- href="{{ route('cart.index') }}" --}}
+                    <a onclick="cartOperation(event, '{{$product->id}}', '+')" {{-- href="{{ route('cart.index') }}" --}}
                     class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50">Add
                     to Cart</a>
                 <a href="{{ route('checkout.index') }}"
